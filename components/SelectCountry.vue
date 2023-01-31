@@ -25,7 +25,7 @@
                             they have very little history to go on.</p>
                     </a-col>
                 </a-row>
-                <a-row>
+                <a-row class="mt-4">
                     <a-col :span="18">
                         <a-row>
                             <a-col :span="10">
@@ -75,31 +75,27 @@ export default {
     },
     methods: {
         ...mapActions("modules/coviddata", ["getCountryReport"]),
-        find() {
-         
-            // if (this.form.country == '' && this.form.iso == '') {
-            //     this.$notification.error({
-            //         message: 'Enter Country Name',
-            //     });
-            // } else {
-
-                try {
-                   
-                    debugger
-                   this.getCountryReport(this.form)
-                   
-                    this.$router.push("/dashboard")
-                
+       async find() {
+         this.loader = true;
+            if (this.form.country == '' && this.form.iso == '') {
+                this.$notification.error({
+                    message: 'Country Name and ISO is required',
+                });
+            } else {
+                try {                
+                  await this.getCountryReport(this.form)  
+                 
+                  this.loader=false
+                    this.$router.push("/dashboard") 
                 } catch (error) {
                     this.loader = false
                     this.$notification.error({
                         message: 'City not found',
-                    });
-                
+                    }); 
             }
         }
 
-
+    }
 
     }
 }
